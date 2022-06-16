@@ -1,5 +1,5 @@
 import random
-
+print('hoi')
 class Set:
     def __init__(self, aantal=1, symbool=1, kleur=1, vulling=1):
         self.a=aantal
