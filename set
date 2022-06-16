@@ -1,0 +1,48 @@
+import random
+
+class Set:
+    def __init__(self, aantal=1, symbool=1, kleur=1, vulling=1):
+        self.a=aantal
+        self.b=symbool
+        self.c=kleur
+        self.d=vulling
+    
+    def __str__(self):
+        return '('+str(self.a)+str(self.b)+str(self.c)+str(self.d)+')'
+    
+    def __repr__(self): #dit zorgt ervoor dat je een lijst met set-kaarten in één keer kan printen
+        return str(self)
+
+def controleer(x,y,z): #controleer of drie kaarten een set vormen
+    if eigenschap(x.a,y.a,z.a) and eigenschap(x.b,y.b,z.b) and eigenschap(x.c,y.c,z.c) and eigenschap(x.d,y.d,z.d):
+        return True
+    return False
+
+def eigenschap(x,y,z): #controleer of drie eigenschappen allemaal hetzelfde of allemaal verschillend zijn
+    if x==y==z or x!=y and y!=z and z!=x:
+        return True
+    return False
+
+def find_set(lijst): #vind alle sets in een lijst met set-kaarten
+    n=len(lijst)
+    uitvoer=[]
+    for i in range(n-2):
+        for j in range(i+1,n-1):
+            for k in range(j+1,n):
+                if controleer(lijst[i],lijst[j],lijst[k]):
+                    uitvoer.append((lijst[i],lijst[j],lijst[k]))
+    return uitvoer
+
+kaarten=[] #dit is een lijst met alle 81 set-kaarten
+for i in range(1,4):
+    for j in range(1,4):
+        for k in range(1,4):
+            for l in range(1,4):
+                kaarten.append(Set(i,j,k,l))
+
+random.shuffle(kaarten) #de kaarten worden geschud
+
+print(kaarten[-12:-8]) #pakt de bovenste 12 kaarten
+print(kaarten[-8:-4])
+print(kaarten[-4:])
+print('De sets zijn:'+str(find_set(kaarten[-12:]))) #vindt alle sets tussen de 12 kaarten
