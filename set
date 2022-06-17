@@ -1,5 +1,5 @@
 import random
-print('hoi')
+
 class Set:
     def __init__(self, aantal=1, symbool=1, kleur=1, vulling=1):
         self.a=aantal
@@ -23,6 +23,15 @@ def eigenschap(x,y,z): #controleer of drie eigenschappen allemaal hetzelfde of a
         return True
     return False
 
+def find_one_set(lijst): #vind één set in een lijst met set-kaarten
+    n=len(lijst)
+        for i in range(n-2):
+            for j in range(i+1,n-1):
+                for k in range(j+1,n):
+                    if controleer(lijst[i],lijst[j],lijst[k]):
+                        return [lijst[i],lijst[j],lijst[k]]
+         return 'Geen set gevonden'
+                
 def find_set(lijst): #vind alle sets in een lijst met set-kaarten
     n=len(lijst)
     uitvoer=[]
@@ -31,6 +40,8 @@ def find_set(lijst): #vind alle sets in een lijst met set-kaarten
             for k in range(j+1,n):
                 if controleer(lijst[i],lijst[j],lijst[k]):
                     uitvoer.append((lijst[i],lijst[j],lijst[k]))
+    if len(uitvoer)==0:
+        return 'Geen sets gevonden'
     return uitvoer
 
 kaarten=[] #dit is een lijst met alle 81 set-kaarten
@@ -45,4 +56,13 @@ random.shuffle(kaarten) #de kaarten worden geschud
 print(kaarten[-12:-8]) #pakt de bovenste 12 kaarten
 print(kaarten[-8:-4])
 print(kaarten[-4:])
-print('De sets zijn:'+str(find_set(kaarten[-12:]))) #vindt alle sets tussen de 12 kaarten
+print('De sets zijn:'+str(find_set(kaarten[-12:]))) #vind alle sets tussen de 12 kaarten
+
+#dingen die we nog nodig hebben:
+#timer
+#wanneer de tijd op is moeten er drie kaarten vervangen worden
+#skip optie voor wanneer de speler denkt dat er geen set ligt
+#puntensysteem: voor de speler: set vinden of correct skippen
+#               voor de computer: tijd is op maar er was wel een set, speler skipt onterecht
+
+
