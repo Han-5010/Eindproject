@@ -25,12 +25,12 @@ def eigenschap(x,y,z): #controleer of drie eigenschappen allemaal hetzelfde of a
 
 def find_one_set(lijst): #vind één set in een lijst met set-kaarten
     n=len(lijst)
-        for i in range(n-2):
-            for j in range(i+1,n-1):
-                for k in range(j+1,n):
-                    if controleer(lijst[i],lijst[j],lijst[k]):
-                        return [lijst[i],lijst[j],lijst[k]]
-         return 'Geen set gevonden'
+    for i in range(n-2):
+        for j in range(i+1,n-1):
+            for k in range(j+1,n):
+                if controleer(lijst[i],lijst[j],lijst[k]):
+                    return [lijst[i],lijst[j],lijst[k]]
+    return 'Geen set gevonden'
                 
 def find_set(lijst): #vind alle sets in een lijst met set-kaarten
     n=len(lijst)
