@@ -6,6 +6,25 @@ class Set:
         self.b=symbool
         self.c=kleur
         self.d=vulling
+        if kleur==1:
+            self.e='green'
+        elif kleur==2:
+            self.e='purple'
+        elif kleur==3:
+            self.e='red'
+        if symbool==1:
+            self.e+='diamond'
+        elif symbool==2:
+            self.e+='oval'
+        elif symbool==3:
+            self.e+='squiggle'
+        if vulling==1:
+            self.e+='empty'
+        elif vulling==2:
+            self.e+='filled'
+        elif vulling==3:
+            self.e+='shaded'
+        self.e+=str(aantal) #Dit is voor het pygame-gedeelte
     
     def __str__(self):
         return '('+str(self.a)+str(self.b)+str(self.c)+str(self.d)+')'
