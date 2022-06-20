@@ -1,3 +1,5 @@
+import pygame
+import os
 import random
 
 class Set:
@@ -24,7 +26,8 @@ class Set:
             self.e+='filled'
         elif vulling==3:
             self.e+='shaded'
-        self.e+=str(aantal) #Dit is voor het pygame-gedeelte
+        self.e+=str(aantal)
+        self.e=pygame.transform.scale(pygame.image.load(os.path.join('kaarten',self.e+'.gif')),(100,200))
     
     def __str__(self):
         return '('+str(self.a)+str(self.b)+str(self.c)+str(self.d)+')'
@@ -42,15 +45,6 @@ def eigenschap(x,y,z): #controleer of drie eigenschappen allemaal hetzelfde of a
         return True
     return False
 
-def find_one_set(lijst): #vind één set in een lijst met set-kaarten
-    n=len(lijst)
-    for i in range(n-2):
-        for j in range(i+1,n-1):
-            for k in range(j+1,n):
-                if controleer(lijst[i],lijst[j],lijst[k]):
-                    return [lijst[i],lijst[j],lijst[k]]
-    return 'Geen set gevonden'
-                
 def find_set(lijst): #vind alle sets in een lijst met set-kaarten
     n=len(lijst)
     uitvoer=[]
@@ -59,8 +53,6 @@ def find_set(lijst): #vind alle sets in een lijst met set-kaarten
             for k in range(j+1,n):
                 if controleer(lijst[i],lijst[j],lijst[k]):
                     uitvoer.append((lijst[i],lijst[j],lijst[k]))
-    if len(uitvoer)==0:
-        return 'Geen sets gevonden'
     return uitvoer
 
 kaarten=[] #dit is een lijst met alle 81 set-kaarten
@@ -71,17 +63,63 @@ for i in range(1,4):
                 kaarten.append(Set(i,j,k,l))
 
 random.shuffle(kaarten) #de kaarten worden geschud
+width,height=900,700
+win=pygame.display.set_mode((width,height))
+pygame.display.set_caption('Set')
+blue=(100,150,255)
+light_blue=(130,170,255)
+lighter_blue=(170,200,255)
+white=(255,255,255)
+black=(0,0,0)
+fps=60
+pygame.font.init()
+font=pygame.font.Font('freesansbold.ttf',72)
+text=font.render('Set!',False,black)
+text_rect=text.get_rect(center=(750,70))
 
-print(kaarten[-12:-8]) #pakt de bovenste 12 kaarten
-print(kaarten[-8:-4])
-print(kaarten[-4:])
-print('De sets zijn:'+str(find_set(kaarten[-12:]))) #vind alle sets tussen de 12 kaarten
+def main():
+    run=True
+    stapel=list(range(12,81)) #kaarten die nog moeten komen
+    in_het_spel=list(range(12)) #de (meestal 12) kaarten die op dit moment in het spel zijn
+    is_geselecteerd=12*[False] #aan het begin heb je nog geen kaarten geselecteerd
+    achtergrond=(200,220,255)
+    while run:
+        mouse_clicked=False
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                run=False #als je op het kruisje klikt, stopt het spel
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                mouse_clicked=True
+        win.fill(achtergrond)
+        pygame.draw.line(win,black,(600,0),(600,700))
+        mouse_pos=pygame.mouse.get_pos()
+        for i in range(12): #voor elk van de kaarten kijken of hij geselecteerd moet worden en welke kleur rechthoek er moet zijn
+            if 40+140*(i%4)<mouse_pos[0]<140*(i%4+1) and 25+225*(i//4)<mouse_pos[1]<225*(i//4+1):
+                if mouse_clicked:
+                    is_geselecteerd[i]=not is_geselecteerd[i]
+                if is_geselecteerd[i]:
+                    pygame.draw.rect(win,light_blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
+                else:
+                    pygame.draw.rect(win,lighter_blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
+            elif is_geselecteerd[i]:
+                pygame.draw.rect(win,blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
+            win.blit(kaarten[in_het_spel[i]].e,(40+140*(i%4),25+225*(i//4)))
+            geselecteerd=[]
+        for i in range(12):
+            if is_geselecteerd[i]:
+                geselecteerd.append(i) #dit zijn de geselecteerde kaarten
+        if len(geselecteerd)==3:
+            if 620<mouse_pos[0]<880 and 20<mouse_pos[1]<120:
+                pygame.draw.rect(win,white,(620,20,260,100))
+                if mouse_clicked:
+                    if controleer(kaarten[in_het_spel[geselecteerd[0]]],kaarten[in_het_spel[geselecteerd[1]]],kaarten[in_het_spel[geselecteerd[2]]]):
+                        in_het_spel[geselecteerd[0]],in_het_spel[geselecteerd[1]],in_het_spel[geselecteerd[2]]=stapel[-3:]
+                        is_geselecteerd=12*[False]
+                    else:
+                        is_geselecteerd=12*[False]
+            win.blit(text,text_rect)
+        pygame.display.update()
+    pygame.quit()
 
-#dingen die we nog nodig hebben:
-#timer
-#wanneer de tijd op is moeten er drie kaarten vervangen worden
-#skip optie voor wanneer de speler denkt dat er geen set ligt
-#puntensysteem: voor de speler: set vinden of correct skippen
-#               voor de computer: tijd is op maar er was wel een set, speler skipt onterecht
-
-
+if __name__=='__main__':
+    main()
