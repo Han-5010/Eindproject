@@ -1,6 +1,7 @@
 import pygame
 import os
 import random
+import math
 
 class Set:
     def __init__(self, aantal=1, symbool=1, kleur=1, vulling=1):
@@ -73,26 +74,36 @@ white=(255,255,255)
 black=(0,0,0)
 fps=60
 pygame.font.init()
-font=pygame.font.Font('freesansbold.ttf',72)
-text=font.render('Set!',False,black)
-text_rect=text.get_rect(center=(750,70))
+font1=pygame.font.Font('freesansbold.ttf',72)
+text1=font1.render('Set!',False,black)
+text1_rect=text1.get_rect(center=(750,70))
+font2=pygame.font.Font('freesansbold.ttf',48)
+text2=font2.render('Geen set',False,black)
+text2_rect=text2.get_rect(center=(750,190))
+max_time=20
 
 def main():
     run=True
-    stapel=list(range(12,81)) #kaarten die nog moeten komen
-    in_het_spel=list(range(12)) #de (meestal 12) kaarten die op dit moment in het spel zijn
+    stapel=kaarten[12:] #kaarten die nog moeten komen
+    in_het_spel=kaarten[:12] #de (meestal 12) kaarten die op dit moment in het spel zijn
     is_geselecteerd=12*[False] #aan het begin heb je nog geen kaarten geselecteerd
     achtergrond=(200,220,255)
+    time=0
+    clock=pygame.time.Clock()
+    
     while run:
+        clock.tick(fps)
         mouse_clicked=False
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 run=False #als je op het kruisje klikt, stopt het spel
             if event.type==pygame.MOUSEBUTTONDOWN:
                 mouse_clicked=True
+                
         win.fill(achtergrond)
         pygame.draw.line(win,black,(600,0),(600,700))
         mouse_pos=pygame.mouse.get_pos()
+        
         for i in range(12): #voor elk van de kaarten kijken of hij geselecteerd moet worden en welke kleur rechthoek er moet zijn
             if 40+140*(i%4)<mouse_pos[0]<140*(i%4+1) and 25+225*(i//4)<mouse_pos[1]<225*(i//4+1):
                 if mouse_clicked:
@@ -103,23 +114,52 @@ def main():
                     pygame.draw.rect(win,lighter_blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
             elif is_geselecteerd[i]:
                 pygame.draw.rect(win,blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
-            win.blit(kaarten[in_het_spel[i]].e,(40+140*(i%4),25+225*(i//4)))
-            geselecteerd=[]
+            win.blit(in_het_spel[i].e,(40+140*(i%4),25+225*(i//4)))
+        
+        geselecteerd=[]
         for i in range(12):
             if is_geselecteerd[i]:
                 geselecteerd.append(i) #dit zijn de geselecteerde kaarten
+        
         if len(geselecteerd)==3:
             if 620<mouse_pos[0]<880 and 20<mouse_pos[1]<120:
                 pygame.draw.rect(win,white,(620,20,260,100))
                 if mouse_clicked:
-                    if controleer(kaarten[in_het_spel[geselecteerd[0]]],kaarten[in_het_spel[geselecteerd[1]]],kaarten[in_het_spel[geselecteerd[2]]]):
+                    if controleer(in_het_spel[geselecteerd[0]],in_het_spel[geselecteerd[1]],in_het_spel[geselecteerd[2]]):
                         in_het_spel[geselecteerd[0]],in_het_spel[geselecteerd[1]],in_het_spel[geselecteerd[2]]=stapel[-3:]
+                        for j in range(3):
+                            stapel.pop(-1)
                         is_geselecteerd=12*[False]
+                        time=0
                     else:
                         is_geselecteerd=12*[False]
-            win.blit(text,text_rect)
+            win.blit(text1,text1_rect)
+        pygame.draw.circle(win,black,(750,600),80,3) #timer
+        pygame.draw.line(win,black,(750,600),(78*math.sin(time/max_time*2*math.pi)+750,-78*math.cos(time/max_time*2*math.pi)+600))
+        time+=1/60
+        if 620<mouse_pos[0]<880 and 140<mouse_pos[1]<240:
+            pygame.draw.rect(win,white,(620,140,260,100))
+            if mouse_clicked:
+                if len(find_set(in_het_spel))>0:
+                    Set=find_set(in_het_spel)[0]
+                    p1,p2,p3=in_het_spel.index(Set[0]),in_het_spel.index(Set[1]),in_het_spel.index(Set[2])
+                    in_het_spel[p1],in_het_spel[p2],in_het_spel[p3]=stapel[-3:]
+                    for j in range(3):
+                        stapel.pop(-1)
+                    is_geselecteerd=12*[False]
+                    time=0
+        win.blit(text2,text2_rect)
         pygame.display.update()
     pygame.quit()
+
+#Iets wat mij handig lijkt om te doen, is om verschillende functies te maken voor verschillende momenten in het spel, dus:
+#een functie voor het begin, waar je een moeilijkheidsgraad kan kiezen(dat moet nog gebeuren trouwens)
+#een functie voor het spel zelf, waarin de timer loopt en je sets moet vinden
+#een functie voor als je op 'geen set' hebt geklikt maar die is er wel, zodat je nog even de tijd krijgt om de set te zien
+#een functie voor een eindscherm
+#Wat we ook nog moeten doen
+#zoals ruben al zei: puntensysteem
+#sowieso moeten we het iets overzichtelijker maken door meer gebruik te maken van functies
 
 if __name__=='__main__':
     main()
