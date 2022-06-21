@@ -290,6 +290,7 @@ def einde(speler_score,computer_score,mouse_pos):
 #Wat we ook nog moeten doen
 #zoals ruben al zei: puntensysteem
 #sowieso moeten we het iets overzichtelijker maken door meer gebruik te maken van functies
+#find_set vervangen met een functie die maar 1 set vindt, dat scheelt rekentijd.
 
 if __name__=='__main__':
     main()
