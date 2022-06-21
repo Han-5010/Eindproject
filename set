@@ -147,16 +147,7 @@ def main():
                 if len(find_set(in_het_spel))>0:
                     Set=find_set(in_het_spel)[0]
                     p1,p2,p3=in_het_spel.index(Set[0]),in_het_spel.index(Set[1]),in_het_spel.index(Set[2])
-                    is_geselecteerd[p1]=[True]
-                    is_geselecteerd[p2]=[True]
-                    is_geselecteerd[p3]=[True]
-                    for i in [p1,p2,p3]: #laat set zien in het rood
-                        if is_geselecteerd[i]:
-                            pygame.draw.rect(win,red,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
-                        win.blit(in_het_spel[i].e,(40+140*(i%4),25+225*(i//4)))  
-                    in_het_spel[p1],in_het_spel[p2],in_het_spel[p3]=stapel[-3:]
-                    pygame.display.update()
-                    pygame.time.delay(3000)
+                    in_het_spel[p1],in_het_spel[p2],in_het_spel[p3]=stapel[-3:]                  
                     for j in range(3):
                         stapel.pop(-1) 
                     is_geselecteerd=12*[False]
