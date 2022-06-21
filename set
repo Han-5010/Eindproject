@@ -195,6 +195,8 @@ def main():
                 status='geen set'
                 
         elif status=='twee_seconden_wachten':
+            if len(stapel)==0:
+                    status='einde'
             time+=1/fps
             if time>2:
                 in_het_spel[p1],in_het_spel[p2],in_het_spel[p3]=stapel[-3:]
@@ -205,9 +207,11 @@ def main():
                 status='spel'
         
         elif status=='geen set':
-            print('moet nog')
-        #Deze gaat ruben doen. Er moeten dus drie kaarten worden vervangen. Die drie kaarten moeten onderin de stapel komen.
-        #Als de stapel leeg is, eindigt het spel
+              if len(stapel)==0:#de stapel is leeg; naar het eindscherm
+                status='einde'
+            else:#er zijn nog kaarten in de stapel, vervang kaarten 1,2,3 met kaarten uit stapel en leg kaarten 1,2,3 onderin stapel
+                in_het_spel[0],in_het_spel[1],in_het_spel[2]=stapel[0:3]
+                status='spel'
         pygame.display.update()
     pygame.quit()
 
