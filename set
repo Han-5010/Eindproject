@@ -152,7 +152,6 @@ def main():
                         stapel.pop(-1) 
                     is_geselecteerd=12*[False]
                     time=0
-        win.blit(text2,text2_rect)
         pygame.display.update()
     pygame.quit()
 
