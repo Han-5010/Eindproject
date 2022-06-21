@@ -80,6 +80,12 @@ text1_rect=text1.get_rect(center=(750,70))
 font2=pygame.font.Font('freesansbold.ttf',48)
 text2=font2.render('Geen set',False,black)
 text2_rect=text2.get_rect(center=(750,190))
+text3=font2.render('Makkelijk',False,black)
+text3_rect=text3.get_rect(center=(450,200))
+text4=font2.render('Gemiddeld',False,black)
+text4_rect=text4.get_rect(center=(450,350))
+text5=font2.render('Moeilijk',False,black)
+text5_rect=text5.get_rect(center=(450,500))
 max_time=20
 
 def main():
@@ -90,9 +96,11 @@ def main():
     achtergrond=(200,220,255)
     time=0
     clock=pygame.time.Clock()
+    status='begin'
     
     while run:
         clock.tick(fps)
+        mouse_pos=pygame.mouse.get_pos()
         mouse_clicked=False
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
@@ -101,45 +109,38 @@ def main():
                 mouse_clicked=True
                 
         win.fill(achtergrond)
-        pygame.draw.line(win,black,(600,0),(600,700))
-        mouse_pos=pygame.mouse.get_pos()
+        if status=='begin':
+            max_time=begin(mouse_pos,mouse_clicked)
+            if type(max_time)==int:
+                status='spel'
+        elif status=='spel':
+            pygame.draw.line(win,black,(600,0),(600,700))
+            
+            draw_cards(in_het_spel,mouse_pos,is_geselecteerd)
         
-        for i in range(12): #voor elk van de kaarten kijken of hij geselecteerd moet worden en welke kleur rechthoek er moet zijn
-            if 40+140*(i%4)<mouse_pos[0]<140*(i%4+1) and 25+225*(i//4)<mouse_pos[1]<225*(i//4+1):
-                if mouse_clicked:
+            for i in range(12):
+                if 40+140*(i%4)<mouse_pos[0]<140*(i%4+1) and 25+225*(i//4)<mouse_pos[1]<225*(i//4+1) and mouse_clicked:
                     is_geselecteerd[i]=not is_geselecteerd[i]
+        
+            geselecteerd=[]
+            for i in range(12):
                 if is_geselecteerd[i]:
-                    pygame.draw.rect(win,light_blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
+                    geselecteerd.append(i) #dit zijn de geselecteerde kaarten
+            
+            draw_side(len(geselecteerd),mouse_pos,time,max_time)
+            time+=1/fps
+        
+            if len(geselecteerd)==3 and 620<mouse_pos[0]<880 and 20<mouse_pos[1]<120 and mouse_clicked: #Er wordt op 'Set!' geklikt
+                if controleer(in_het_spel[geselecteerd[0]],in_het_spel[geselecteerd[1]],in_het_spel[geselecteerd[2]]):
+                    in_het_spel[geselecteerd[0]],in_het_spel[geselecteerd[1]],in_het_spel[geselecteerd[2]]=stapel[-3:]
+                    for j in range(3):
+                        stapel.pop(-1)
+                    is_geselecteerd=12*[False]
+                    time=0
                 else:
-                    pygame.draw.rect(win,lighter_blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
-            elif is_geselecteerd[i]:
-                pygame.draw.rect(win,blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
-            win.blit(in_het_spel[i].e,(40+140*(i%4),25+225*(i//4)))
-        
-        geselecteerd=[]
-        for i in range(12):
-            if is_geselecteerd[i]:
-                geselecteerd.append(i) #dit zijn de geselecteerde kaarten
-        
-        if len(geselecteerd)==3:
-            if 620<mouse_pos[0]<880 and 20<mouse_pos[1]<120:
-                pygame.draw.rect(win,white,(620,20,260,100))
-                if mouse_clicked:
-                    if controleer(in_het_spel[geselecteerd[0]],in_het_spel[geselecteerd[1]],in_het_spel[geselecteerd[2]]):
-                        in_het_spel[geselecteerd[0]],in_het_spel[geselecteerd[1]],in_het_spel[geselecteerd[2]]=stapel[-3:]
-                        for j in range(3):
-                            stapel.pop(-1)
-                        is_geselecteerd=12*[False]
-                        time=0
-                    else:
-                        is_geselecteerd=12*[False]
-            win.blit(text1,text1_rect)
-        pygame.draw.circle(win,black,(750,600),80,3) #timer
-        pygame.draw.line(win,black,(750,600),(78*math.sin(time/max_time*2*math.pi)+750,-78*math.cos(time/max_time*2*math.pi)+600))
-        time+=1/60
-        if 620<mouse_pos[0]<880 and 140<mouse_pos[1]<240:
-            pygame.draw.rect(win,white,(620,140,260,100))
-            if mouse_clicked:
+                    is_geselecteerd=12*[False]
+                    
+            if 620<mouse_pos[0]<880 and 140<mouse_pos[1]<240 and mouse_clicked: #Er wordt op 'Geen set' geklikt
                 if len(find_set(in_het_spel))>0:
                     Set=find_set(in_het_spel)[0]
                     p1,p2,p3=in_het_spel.index(Set[0]),in_het_spel.index(Set[1]),in_het_spel.index(Set[2])
@@ -148,9 +149,49 @@ def main():
                         stapel.pop(-1)
                     is_geselecteerd=12*[False]
                     time=0
-        win.blit(text2,text2_rect)
         pygame.display.update()
     pygame.quit()
+
+def begin(mouse_pos,mouse_clicked):
+    draw_button('Makkelijk',300,150,300,100,48,mouse_pos)
+    draw_button('Gemiddeld',300,300,300,100,48,mouse_pos)
+    draw_button('Moeilijk',300,450,300,100,48,mouse_pos)
+    if mouse_clicked:
+        if 300<mouse_pos[0]<600 and 150<mouse_pos[1]<250:
+            return 35
+        elif 300<mouse_pos[0]<600 and 300<mouse_pos[1]<400: 
+            return 25
+        elif 300<mouse_pos[0]<600 and 450<mouse_pos[1]<550:
+            return 15
+  
+
+def draw_button(text,x,y,width,height,grootte,mouse_pos): 
+    font=pygame.font.Font('freesansbold.ttf',grootte)
+    text=font.render(text,False,black) 
+    text_rect=text.get_rect(center=(x+width/2,y+height/2)) 
+    if x<mouse_pos[0]<x+width and y<mouse_pos[1]<y+height: 
+        pygame.draw.rect(win,white,(x,y,width,height)) 
+    win.blit(text,text_rect)
+
+def draw_cards(in_het_spel,mouse_pos,is_geselecteerd):
+    for i in range(len(in_het_spel)):
+        if 40+140*(i%4)<mouse_pos[0]<140*(i%4+1) and 25+225*(i//4)<mouse_pos[1]<225*(i//4+1):
+            if is_geselecteerd[i]:
+                pygame.draw.rect(win,light_blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
+            else:
+                pygame.draw.rect(win,lighter_blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
+        else:
+            if is_geselecteerd[i]:
+                pygame.draw.rect(win,blue,pygame.Rect(20+140*(i%4),13+225*(i//4),140,225))
+        win.blit(in_het_spel[i].e,(40+140*(i%4),25+225*(i//4)))
+
+def draw_side(num_geselecteerd,mouse_pos,time,max_time):
+    if num_geselecteerd==3:
+        draw_button('Set!',620,20,260,100,72,mouse_pos)
+    draw_button('Geen set',620,140,260,100,48,mouse_pos)
+    pygame.draw.circle(win,black,(750,600),80,3)
+    pygame.draw.line(win,black,(750,600),(78*math.sin(time/max_time*2*math.pi)+750,-78*math.cos(time/max_time*2*math.pi)+600))
+                
 
 #Iets wat mij handig lijkt om te doen, is om verschillende functies te maken voor verschillende momenten in het spel, dus:
 #een functie voor het begin, waar je een moeilijkheidsgraad kan kiezen(dat moet nog gebeuren trouwens)
