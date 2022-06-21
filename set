@@ -140,10 +140,11 @@ def main():
         
         elif status=='einde':
             einde(speler_score,computer_score,mouse_pos)
-            if mouse_clicked:
+            if mouse_clicked:#'Nog een keer!'
                 if 250<mouse_pos[0]<650 and 400<mouse_pos[1]<500:
-                    status='begin'
-                elif 250<mouse_pos[0]<650 and 520<mouse_pos[1]<620:
+                    random.shuffle(kaarten)
+                    main()
+                elif 250<mouse_pos[0]<650 and 520<mouse_pos[1]<620:#'Stoppen'
                     run=False
         
         else:
