@@ -293,9 +293,14 @@ def draw_side(num_geselecteerd,mouse_pos,time,max_time,status,computer_score,spe
     pygame.draw.rect(win,black,(878,20,4,20))#
     pygame.draw.circle(win,black,(875,30),18,3)#einde pauzeknop
     draw_button('Geen set',620,140,260,100,48,mouse_pos)
-    pygame.draw.circle(win,black,(750,600),80,3)
+    punten=[(750,600)]
+    aantal=max(5,math.ceil(20*time/max_time))
+    for i in range(aantal):
+        punten.append((750+79*math.sin(i*time/max_time/(aantal-1)*2*math.pi),600-79*math.cos(i*time/max_time/(aantal-1)*2*math.pi)))
+    pygame.draw.polygon(win,white,punten)
+    pygame.draw.circle(win,black,(750,600),80,5)
     pygame.draw.line(win,black,(750,600),(750,520))
-    pygame.draw.line(win,red,(750,600),(78*math.sin(time/max_time*2*math.pi)+750,-78*math.cos(time/max_time*2*math.pi)+600))
+    pygame.draw.line(win,red,(750,600),(75*math.sin(time/max_time*2*math.pi)+750,-75*math.cos(time/max_time*2*math.pi)+600))
     draw_button('Speler',620,280,120,40,30,(700,300))
     draw_button('Computer',760,280,120,40,23,(800,300))
     draw_button(str(speler_score),620,320,120,100,80,(700,400))
