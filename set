@@ -232,6 +232,7 @@ def main():
                     for j in range(3):
                        stapel.pop(-1)
                 is_geselecteerd=len(in_het_spel)*[False]
+                time=0
                 status='spel'
         
         elif status=='geen set':
