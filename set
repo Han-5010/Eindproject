@@ -154,6 +154,11 @@ def main():
                     geselecteerd.append(i) #dit zijn de geselecteerde kaarten
             draw_side(len(geselecteerd),mouse_pos,time,max_time,status,computer_score,speler_score)
         
+        if status=='spel' or status=='twee_seconden_wachten':#in deze statussen moet de pauzeknop kunnen werken
+            if 855<mouse_pos[0]<895 and 10<mouse_pos[1]<50 and mouse_clicked:
+                vorige_status=status
+                status='pauze'
+        
         if status=='spel':
             time+=1/fps
             
@@ -180,6 +185,18 @@ def main():
                     status='geen set'
             if time>max_time:
                 status='computer_beurt'
+        
+        elif status=='pauze':#maak pauzemenu
+            win.fill(achtergrond)
+            draw_button('Verder spelen',250,150,400,100,48,mouse_pos)#maak knoppen
+            draw_button('Terug naar hoofdmenu',150,300,600,100,48,mouse_pos)
+            draw_button('Stoppen',300,450,300,100,48,mouse_pos)
+            if 250<mouse_pos[0]<650 and 150<mouse_pos[1]<250 and mouse_clicked:#verder spelen
+                status=vorige_status#ga terug naar de vorige status
+            if 150<mouse_pos[0]<750 and 300<mouse_pos[1]<400 and mouse_clicked:#naar hoofdmenu
+                main()
+            if 300<mouse_pos[0]<600 and 450<mouse_pos[1]<550 and mouse_clicked:#stoppen
+                run=False
                 
         elif status=='computer_beurt':
             computer_score+=1
@@ -258,6 +275,10 @@ def draw_side(num_geselecteerd,mouse_pos,time,max_time,status,computer_score,spe
     pygame.draw.line(win,black,(600,0),(600,700))
     if num_geselecteerd==3 and status=='spel':
         draw_button('Set!',620,20,260,100,72,mouse_pos)
+    draw_button('',855,10,40,40,20,mouse_pos)#maak onderdelen van de pauzeknop:
+    pygame.draw.rect(win,black,(867,20,4,20))#
+    pygame.draw.rect(win,black,(878,20,4,20))#
+    pygame.draw.circle(win,black,(875,30),18,3)#einde pauzeknop         
     draw_button('Geen set',620,140,260,100,48,mouse_pos)
     pygame.draw.circle(win,black,(750,600),80,3)
     pygame.draw.line(win,black,(750,600),(750,520))
