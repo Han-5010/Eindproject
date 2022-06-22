@@ -12,4 +12,4 @@ Om set te kunnen spelen moet het volgende gedaan worden:
 
 -je kan nu 'set' spelen tegen een computer; voor de spelregels verwijzen we je naar de knop 'uitleg'
 
--have fun!
+-Veel plezier!
