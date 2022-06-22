@@ -1,12 +1,12 @@
 # DUTCH:
-''Eindproject'' is een computergame gebasseerd op het gezelschapsspelletje set. Het project is geschreven door eerstejaars studenten van Universiteit Utrecht. 
+''Eindproject'' is een computergame gebasseerd op het gezelschapsspelletje set. Het project is geschreven door eerstejaars studenten van Universiteit Utrecht. Voor het runnen van het bestand is het nodig om het kaarten.zip bestand te unzippen en alle onderdelen ervan samen met de code in een mapje te zetten.
 Om set te kunnen spelen moet het volgende gedaan worden:
 
 -installeer anaconda, en spyder(anaconda3)
 
 -installeer pygame door 'pip install pygame' in te voeren in de anaconda command prompt
 
--maak een folder met het pythonbestand en alle kaarten in je python file
+-voeg het mapje met de kaarten en het pythonbestand toe aan de pythonfile
 
 -open het pythonbestand via python en run het
 
