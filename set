@@ -308,11 +308,14 @@ def draw_side(num_geselecteerd,mouse_pos,time,max_time,status,computer_score,spe
     pygame.draw.line(win,black,(600,0),(600,700)) #een scheidingslijn
     if num_geselecteerd==3 and status=='spel':
         draw_button('Set!',620,20,260,100,72,mouse_pos) #de 'Set!'-knop
+        
     draw_button('',855,10,40,40,20,mouse_pos)#maak onderdelen van de pauzeknop:
     pygame.draw.rect(win,black,(867,20,4,20))#
     pygame.draw.rect(win,black,(878,20,4,20))#
     pygame.draw.circle(win,black,(875,30),18,3)#einde pauzeknop
+    
     draw_button('Geen set',620,140,260,100,48,mouse_pos)
+    
     punten=[(750,600)] #hier wordt de timer gemaakt, met een veelhoek zodat de timer langzaam wit wordt
     aantal=max(5,math.ceil(20*time/max_time))
     for i in range(aantal):
@@ -321,6 +324,7 @@ def draw_side(num_geselecteerd,mouse_pos,time,max_time,status,computer_score,spe
     pygame.draw.circle(win,black,(750,600),80,5)
     pygame.draw.line(win,black,(750,600),(750,520))
     pygame.draw.line(win,red,(750,600),(75*math.sin(time/max_time*2*math.pi)+750,-75*math.cos(time/max_time*2*math.pi)+600)) #einde timer
+    
     draw_button('Speler',620,280,120,40,30,(700,300)) #begin score
     draw_button('Computer',760,280,120,40,23,(800,300))
     draw_button(str(speler_score),620,320,120,100,80,(700,400))
