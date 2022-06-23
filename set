@@ -208,6 +208,7 @@ def main():
             if 250<mouse_pos[0]<650 and 150<mouse_pos[1]<250 and mouse_clicked:#verder spelen
                 status=vorige_status#ga terug naar de vorige status
             if 150<mouse_pos[0]<750 and 300<mouse_pos[1]<400 and mouse_clicked:#naar hoofdmenu
+                random.shuffle(kaarten)
                 main()
             if 300<mouse_pos[0]<600 and 450<mouse_pos[1]<550 and mouse_clicked:#stoppen
                 run=False
