@@ -168,18 +168,16 @@ def main():
         
             if len(geselecteerd)==3 and 620<mouse_pos[0]<880 and 20<mouse_pos[1]<120 and mouse_clicked: #Er wordt op 'Set!' geklikt
                 if controleer(in_het_spel[geselecteerd[0]],in_het_spel[geselecteerd[1]],in_het_spel[geselecteerd[2]]):
+                    is_geselecteerd=len(in_het_spel)*[False]
+                    speler_score+=1
+                    time=0
                     if len(stapel)==0:
                         for i in range(3):
                             in_het_spel.pop(geselecteerd[2-i])
-                        is_geselecteerd=len(in_het_spel)*[False]
-                        speler_score+=1
                     else:
                         in_het_spel[geselecteerd[0]],in_het_spel[geselecteerd[1]],in_het_spel[geselecteerd[2]]=stapel[-3:]
                         for j in range(3):
                             stapel.pop(-1)
-                        is_geselecteerd=len(in_het_spel)*[False]
-                        time=0
-                        speler_score+=1
                 else: #De set klopt niet, de computer gaat er een aanwijzen (als er een is)
                     time=0
                     status='computer_beurt'
@@ -216,13 +214,14 @@ def main():
                 is_geselecteerd[p1]=True #drie kaarten die een set vormen worden geselecteerd zodat de speler het kan zien
                 is_geselecteerd[p2]=True
                 is_geselecteerd[p3]=True
+                time2=0
                 status='twee_seconden_wachten' #geeft de speler de tijd om de set te zien
             else:
                 status='geen set'
                 
         elif status=='twee_seconden_wachten':
-            time+=1/fps
-            if time>2:
+            time2+=1/fps
+            if time2>2:
                 if len(stapel)==0:
                     in_het_spel.pop(p3)
                     in_het_spel.pop(p2)
@@ -232,7 +231,6 @@ def main():
                     for j in range(3):
                        stapel.pop(-1)
                 is_geselecteerd=len(in_het_spel)*[False]
-                time=0
                 status='spel'
         
         elif status=='geen set':
