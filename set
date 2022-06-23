@@ -9,7 +9,7 @@ class Set:
         self.b=symbool
         self.c=kleur
         self.d=vulling
-        if kleur==1:
+        if kleur==1: #self.e is de naam van het bijbehorende plaatje
             self.e='green'
         elif kleur==2:
             self.e='purple'
@@ -30,7 +30,7 @@ class Set:
         self.e+=str(aantal)
         self.e=pygame.transform.scale(pygame.image.load(os.path.join('kaarten',self.e+'.gif')),(100,200))
     
-    def __str__(self):
+    def __str__(self): #Deze string functie wordt in het spel niet gebruikt, maar is wel handig voor het programmeren
         return '('+str(self.a)+str(self.b)+str(self.c)+str(self.d)+')'
     
     def __repr__(self): #dit zorgt ervoor dat je een lijst met set-kaarten in één keer kan printen
@@ -65,15 +65,16 @@ for i in range(1,4):
 
 random.shuffle(kaarten) #de kaarten worden geschud
 width,height=900,700
-win=pygame.display.set_mode((width,height))
+win=pygame.display.set_mode((width,height)) #het venster met bijbehorende afmetingen
 pygame.display.set_caption('Set')
+achtergrond=(200,220,255) #de kleuren worden hier gedefinieerd, zodat we dat later niet hoeven te doen
 blue=(100,150,255)
 light_blue=(130,170,255)
 lighter_blue=(170,200,255)
 white=(255,255,255)
 black=(0,0,0)
 red=(255,0,0)
-fps=60
+fps=60 #dit is belangrijk, want hierdoor loopt de timer bij iedereen even snel
 pygame.font.init()
 font_uitleg=pygame.font.Font('freesansbold.ttf',20)
 uitleg=['Welkom bij set!',
@@ -101,15 +102,14 @@ for i in range(len(uitleg)):
     text_uitleg_rect.append(text_uitleg[i].get_rect(center=(450,330+30*(i-(len(uitleg)+1)//2))))
 
 def main():
+    clock=pygame.time.Clock()
     run=True
     stapel=kaarten[12:] #kaarten die nog moeten komen
     in_het_spel=kaarten[:12] #de (meestal 12) kaarten die op dit moment in het spel zijn
     is_geselecteerd=12*[False] #aan het begin heb je nog geen kaarten geselecteerd
-    achtergrond=(200,220,255)
     time=0
-    clock=pygame.time.Clock()
     status='begin'
-    computer_score=0
+    computer_score=0 #al deze variabelen worden in de main functie gedefinieerd, omdat ze niet constant zijn
     speler_score=0
     
     while run:
@@ -124,7 +124,7 @@ def main():
                 mouse_clicked=True
                 
         win.fill(achtergrond)
-        if status=='begin':
+        if status=='begin': #we hebben voor verschillende momenten in het spel verschillende statussen gebruikt, wat het ook overzichtelijk houdt
             max_time=begin(mouse_pos,mouse_clicked)
             if max_time==0:
                 status='uitleg'
@@ -140,19 +140,19 @@ def main():
         
         elif status=='einde':
             einde(speler_score,computer_score,mouse_pos)
-            if mouse_clicked:#'Nog een keer!'
-                if 250<mouse_pos[0]<650 and 400<mouse_pos[1]<500:
+            if mouse_clicked:
+                if 250<mouse_pos[0]<650 and 400<mouse_pos[1]<500:#'Nog een keer!'
                     random.shuffle(kaarten)
                     main()
                 elif 250<mouse_pos[0]<650 and 520<mouse_pos[1]<620:#'Stoppen'
                     run=False
         
-        else:
+        else: #dit gebeurt altijd, behalve aan het begin, bij de uitleg of aan het einde
             draw_cards(in_het_spel,mouse_pos,is_geselecteerd)
+            draw_side(len(geselecteerd),mouse_pos,time,max_time,status,computer_score,speler_score)
             for i in range(len(in_het_spel)):
                 if is_geselecteerd[i]:
                     geselecteerd.append(i) #dit zijn de geselecteerde kaarten
-            draw_side(len(geselecteerd),mouse_pos,time,max_time,status,computer_score,speler_score)
         
         if status=='spel' or status=='twee_seconden_wachten':#in deze statussen moet de pauzeknop kunnen werken
             if 855<mouse_pos[0]<895 and 10<mouse_pos[1]<50 and mouse_clicked:
@@ -164,7 +164,7 @@ def main():
             
             for i in range(len(in_het_spel)):
                 if 40+140*(i//3)<mouse_pos[0]<140*(i//3+1) and 25+225*(i%3)<mouse_pos[1]<225*(i%3+1) and mouse_clicked and time>1/fps:
-                    is_geselecteerd[i]=not is_geselecteerd[i]
+                    is_geselecteerd[i]=not is_geselecteerd[i] #als je op een kaart klikt, wordt hij ge(de)selecteerd
         
             if len(geselecteerd)==3 and 620<mouse_pos[0]<880 and 20<mouse_pos[1]<120 and mouse_clicked: #Er wordt op 'Set!' geklikt
                 if controleer(in_het_spel[geselecteerd[0]],in_het_spel[geselecteerd[1]],in_het_spel[geselecteerd[2]]):
@@ -180,7 +180,7 @@ def main():
                         is_geselecteerd=len(in_het_spel)*[False]
                         time=0
                         speler_score+=1
-                else:
+                else: #De set klopt niet, de computer gaat er een aanwijzen (als er een is)
                     time=0
                     status='computer_beurt'
                     
@@ -213,10 +213,10 @@ def main():
                 is_geselecteerd=len(in_het_spel)*[False]
                 Set=find_set(in_het_spel)[0]
                 p1,p2,p3=in_het_spel.index(Set[0]),in_het_spel.index(Set[1]),in_het_spel.index(Set[2])
-                is_geselecteerd[p1]=True
+                is_geselecteerd[p1]=True #drie kaarten die een set vormen worden geselecteerd zodat de speler het kan zien
                 is_geselecteerd[p2]=True
                 is_geselecteerd[p3]=True
-                status='twee_seconden_wachten'
+                status='twee_seconden_wachten' #geeft de speler de tijd om de set te zien
             else:
                 status='geen set'
                 
@@ -238,15 +238,15 @@ def main():
         elif status=='geen set':
             if len(find_set(stapel+in_het_spel))==0:#er zijn geen sets meer tussen alle kaarten in de stapel en die in het spel, naar het eindscherm
                 status='einde'
-            else:#er zijn nog kaarten in de stapel, vervang kaarten 1,2,3 met kaarten uit stapel en leg kaarten 1,2,3 onderin stapel
+            else:#er is nog wel een set, dus de stapel is niet leeg, vervang kaarten 1,2,3 met kaarten uit stapel en leg kaarten 1,2,3 onderin stapel
                 for i in range(3):
                     stapel.insert(0,in_het_spel[i])
                     in_het_spel[i]=stapel[-1]
                     stapel.pop(-1)
                 status='spel'
         
-        pygame.display.update()
-    pygame.quit()
+        pygame.display.update()#dit zorgt ervoor dat alles daadwerkelijk wordt getekent
+    pygame.quit() #als run==false moet het spel stoppen
 
 def begin(mouse_pos,mouse_clicked):
     draw_button('Makkelijk',300,150,300,100,48,mouse_pos)
@@ -264,8 +264,8 @@ def begin(mouse_pos,mouse_clicked):
             return 0
   
 
-def draw_button(text,x,y,width,height,grootte,mouse_pos): 
-    font=pygame.font.Font('freesansbold.ttf',grootte)
+def draw_button(text,x,y,width,height,grootte,mouse_pos): #bij deze functie wordt er een knop gemaakt die wit wordt als je je muis eroverheen houdt;
+    font=pygame.font.Font('freesansbold.ttf',grootte) #Hij wordt soms ook gebruikt puur om text neer te zetten, door als laatste input niet mouse_pos te gebruiken
     text=font.render(text,False,black) 
     text_rect=text.get_rect(center=(x+width/2,y+height/2)) 
     if x<mouse_pos[0]<x+width and y<mouse_pos[1]<y+height: 
@@ -273,7 +273,7 @@ def draw_button(text,x,y,width,height,grootte,mouse_pos):
     win.blit(text,text_rect)
 
 def draw_cards(in_het_spel,mouse_pos,is_geselecteerd):
-    for i in range(len(in_het_spel)):
+    for i in range(len(in_het_spel)): #de kaarten worden getekent met de juiste achtergrondkleur
         if 40+140*(i//3)<mouse_pos[0]<140*(i//3+1) and 25+225*(i%3)<mouse_pos[1]<225*(i%3+1):
             if is_geselecteerd[i]:
                 pygame.draw.rect(win,light_blue,pygame.Rect(20+140*(i//3),13+225*(i%3),140,225))
@@ -285,28 +285,28 @@ def draw_cards(in_het_spel,mouse_pos,is_geselecteerd):
         win.blit(in_het_spel[i].e,(40+140*(i//3),25+225*(i%3)))
 
 def draw_side(num_geselecteerd,mouse_pos,time,max_time,status,computer_score,speler_score):
-    pygame.draw.line(win,black,(600,0),(600,700))
+    pygame.draw.line(win,black,(600,0),(600,700)) #een scheidingslijn
     if num_geselecteerd==3 and status=='spel':
-        draw_button('Set!',620,20,260,100,72,mouse_pos)
+        draw_button('Set!',620,20,260,100,72,mouse_pos) #de 'Set!'-knop
     draw_button('',855,10,40,40,20,mouse_pos)#maak onderdelen van de pauzeknop:
     pygame.draw.rect(win,black,(867,20,4,20))#
     pygame.draw.rect(win,black,(878,20,4,20))#
     pygame.draw.circle(win,black,(875,30),18,3)#einde pauzeknop
     draw_button('Geen set',620,140,260,100,48,mouse_pos)
-    punten=[(750,600)]
+    punten=[(750,600)] #hier wordt de timer gemaakt, met een veelhoek zodat de timer langzaam wit wordt
     aantal=max(5,math.ceil(20*time/max_time))
     for i in range(aantal):
         punten.append((750+79*math.sin(i*time/max_time/(aantal-1)*2*math.pi),600-79*math.cos(i*time/max_time/(aantal-1)*2*math.pi)))
     pygame.draw.polygon(win,white,punten)
     pygame.draw.circle(win,black,(750,600),80,5)
     pygame.draw.line(win,black,(750,600),(750,520))
-    pygame.draw.line(win,red,(750,600),(75*math.sin(time/max_time*2*math.pi)+750,-75*math.cos(time/max_time*2*math.pi)+600))
-    draw_button('Speler',620,280,120,40,30,(700,300))
+    pygame.draw.line(win,red,(750,600),(75*math.sin(time/max_time*2*math.pi)+750,-75*math.cos(time/max_time*2*math.pi)+600)) #einde timer
+    draw_button('Speler',620,280,120,40,30,(700,300)) #begin score
     draw_button('Computer',760,280,120,40,23,(800,300))
     draw_button(str(speler_score),620,320,120,100,80,(700,400))
     draw_button(str(computer_score),760,320,120,100,80,(800,400))
     pygame.draw.line(win,black,(620,320),(740,320))
-    pygame.draw.line(win,black,(760,320),(880,320))
+    pygame.draw.line(win,black,(760,320),(880,320)) #eind score
 
 def einde(speler_score,computer_score,mouse_pos):
     if speler_score>computer_score:
@@ -323,16 +323,6 @@ def einde(speler_score,computer_score,mouse_pos):
     pygame.draw.line(win,black,(480,240),(600,240))
     draw_button('Nog een keer!',250,400,400,100,50,mouse_pos)
     draw_button('Stoppen',250,520,400,100,50,mouse_pos)
-
-#Iets wat mij handig lijkt om te doen, is om verschillende functies te maken voor verschillende momenten in het spel, dus:
-#een functie voor het begin, waar je een moeilijkheidsgraad kan kiezen(dat moet nog gebeuren trouwens)
-#een functie voor het spel zelf, waarin de timer loopt en je sets moet vinden
-#een functie voor als je op 'geen set' hebt geklikt maar die is er wel, zodat je nog even de tijd krijgt om de set te zien
-#een functie voor een eindscherm
-#Wat we ook nog moeten doen
-#zoals ruben al zei: puntensysteem
-#sowieso moeten we het iets overzichtelijker maken door meer gebruik te maken van functies
-#find_set vervangen met een functie die maar 1 set vindt, dat scheelt rekentijd.
 
 if __name__=='__main__':
     main()
