@@ -89,14 +89,14 @@ uitleg=['Welkom bij set!',
         'In dit spel zijn er 81 unieke kaarten met elk 4 eigenschappen.',
         'De eigenscahppen zijn:',
         'Symbool: Elke kaart heeft ruiten, ovalen of squiggle-vormen.',
-        'Kleur: Elke kaart heeft rode, groene of paarse kleur',
+        'Kleur: Elke kaart heeft rode, groene of paarse kleur.',
         'Aantal: Elke kaart heeft 1, 2 of 3 symbolen.',
         'Vulling: Elke kaart heeft gevulde, lege of half gestreepte vormen.',
         'Bij dit spel is het de bedoeling om drie kaarten te vinden,',
         'waarbij voor elke eigenschap geldt dat ze allemaal hetzelfde of allemaal verschillend zijn.',
         'Een groep kaarten met deze eigenschap noemen we een set.',
         'Er zijn straks 12 kaarten in het spel en er is een timer.',
-        'Als je een set heb gevonden, selecteer je die drie kaarten en klik je op "Set!"',
+        'Als je een set heb gevonden, selecteer je die drie kaarten en klik je op "Set!".',
         'Je verdient dan een punt, en de set wordt met nieuwe kaarten vervangen.',
         'Als er geen set is, klik dan op "Geen set" om een punt te krijgen.',
         'Er worden dan drie kaarten vervangen zodat je verder kan spelen.',
@@ -128,7 +128,7 @@ def main():
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 run=False #als je op het kruisje klikt, stopt het spel
-            if event.type==pygame.MOUSEBUTTONDOWN:
+            if event.type==pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]==True:
                 mouse_clicked=True
                 
         win.fill(achtergrond)
