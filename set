@@ -85,7 +85,7 @@ uitleg=['Welkom bij set!',
         'Aantal: Elke kaart heeft 1, 2 of 3 vormen.',
         'Vulling: Elke kaart heeft gevulde, lege of gestippelde vormen.',
         'Bij dit spel is het de bedoeling om drie kaarten te vinden,',
-        'waarbij voor elke eigenschap geldt dat ze allemaal hetzelfde of allemaal verschillend zijn',
+        'waarbij voor elke eigenschap geldt dat ze allemaal hetzelfde of allemaal verschillend zijn.',
         'Een groep kaarten met deze eigenschap noemen we een set.',
         'Er zijn straks 12 kaarten in het spel en er is een timer.',
         'Als je een set heb gevonden, selecteer je die drie kaarten en klik je op "Set!"',
@@ -93,7 +93,7 @@ uitleg=['Welkom bij set!',
         'Als er geen set is, klik dan op "Geen set" om een punt te krijgen.',
         'Er worden dan drie kaarten vervangen zodat je verder kan spelen.',
         'Maar let op: Als je een foute set invult, onterecht op "Geen set" klikt',
-        'of als de tijd om is, terwijl er een set was, krijgt de computer een punt',
+        'of als de tijd om is, terwijl er een set was, krijgt de computer een punt.',
         'Veel succes en plezier!']
 text_uitleg=[]
 text_uitleg_rect=[]
@@ -148,11 +148,11 @@ def main():
                     run=False
         
         else: #dit gebeurt altijd, behalve aan het begin, bij de uitleg of aan het einde
-            draw_cards(in_het_spel,mouse_pos,is_geselecteerd)
-            draw_side(len(geselecteerd),mouse_pos,time,max_time,status,computer_score,speler_score)
             for i in range(len(in_het_spel)):
                 if is_geselecteerd[i]:
                     geselecteerd.append(i) #dit zijn de geselecteerde kaarten
+            draw_cards(in_het_spel,mouse_pos,is_geselecteerd)
+            draw_side(len(geselecteerd),mouse_pos,time,max_time,status,computer_score,speler_score)
         
         if status=='spel' or status=='twee_seconden_wachten':#in deze statussen moet de pauzeknop kunnen werken
             if 855<mouse_pos[0]<895 and 10<mouse_pos[1]<50 and mouse_clicked:
