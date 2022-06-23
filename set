@@ -71,7 +71,6 @@ for i in range(1,4):
             for l in range(1,4):
                 kaarten.append(Set(i,j,k,l))
 
-random.shuffle(kaarten) #de kaarten worden geschud
 width,height=900,700
 win=pygame.display.set_mode((width,height)) #het venster met bijbehorende afmetingen
 pygame.display.set_caption('Set')
@@ -110,6 +109,7 @@ for i in range(len(uitleg)):
     text_uitleg_rect.append(text_uitleg[i].get_rect(center=(450,330+30*(i-(len(uitleg)+1)//2))))
 
 def main():
+    random.shuffle(kaarten) #de kaarten worden geschud
     clock=pygame.time.Clock()
     run=True
     stapel=kaarten[12:] #kaarten die nog moeten komen
@@ -117,7 +117,7 @@ def main():
     is_geselecteerd=12*[False] #aan het begin heb je nog geen kaarten geselecteerd
     time=0
     status='begin'
-    computer_score=0 #al deze variabelen worden in de main functie gedefinieerd, omdat ze niet constant zijn
+    computer_score=0 #al deze variabelen worden hier gedefinieerd, omdat ze niet constant zijn
     speler_score=0
     
     while run:
@@ -151,7 +151,13 @@ def main():
             if mouse_clicked:
                 if 250<mouse_pos[0]<650 and 400<mouse_pos[1]<500:#'Nog een keer!'
                     random.shuffle(kaarten)
-                    main()
+                    stapel=kaarten[12:]
+                    in_het_spel=kaarten[:12]
+                    is_geselecteerd=12*[False]
+                    time=0
+                    status='begin'
+                    computer_score=0
+                    speler_score=0
                 elif 250<mouse_pos[0]<650 and 520<mouse_pos[1]<620:#'Stoppen'
                     run=False
         
@@ -210,7 +216,13 @@ def main():
                 status=vorige_status#ga terug naar de vorige status
             if 150<mouse_pos[0]<750 and 300<mouse_pos[1]<400 and mouse_clicked:#naar hoofdmenu
                 random.shuffle(kaarten)
-                main()
+                stapel=kaarten[12:]
+                in_het_spel=kaarten[:12]
+                is_geselecteerd=12*[False]
+                time=0
+                status='begin'
+                computer_score=0
+                speler_score=0
             if 300<mouse_pos[0]<600 and 450<mouse_pos[1]<550 and mouse_clicked:#stoppen
                 run=False
             
